@@ -24,7 +24,7 @@ contract Token is ERC20Interface {
     mapping(address => mapping(address => uint)) allowed;
 
     constructor() {
-        symbol = "STC"; // Crowdfunding Token
+        symbol = "STC"; // Strongcoin 
         name = "Strongcoin Token";
         decimals = 18;
         _totalSupply = 1000000 * 10 ** uint(decimals);
