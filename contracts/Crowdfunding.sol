@@ -26,27 +26,29 @@ contract Crowdfunding is ERC721URIStorage {
     function invest(uint8 investorType, uint256 amount, string memory nftURI) external {
         require(investorType == 1 || investorType == 2, "Invalid investor type");
         require(amount > 0, "Investment amount must be greater than zero");
-        require(investors[msg.sender].amount == 0, "Investor already registered");
 
-        investors[msg.sender] = Investor(investorType, amount);
+        if (investors[msg.sender].amount > 0) {
+            investors[msg.sender].amount += amount;
+        } else {
+            investors[msg.sender] = Investor(investorType, amount);
+        }
 
-        // Token distribution logic
+        uint256 tokenReward;
         if (investorType == 1) {
-            token.transfer(msg.sender, amount * 10);
+            tokenReward = amount * 5;
+            token.mint(msg.sender, tokenReward);
         } else if (investorType == 2) {
-            token.transfer(msg.sender, amount * 5);
+            tokenReward = amount * 10;
+            token.mint(msg.sender, tokenReward);
 
-            // Mint NFT for Type 2 investors
-            nftCounter++;
-            _safeMint(msg.sender, nftCounter);
-            _setTokenURI(nftCounter, nftURI);
-            emit NFTMinted(msg.sender, nftCounter, nftURI);
+            if (investors[msg.sender].amount == amount) {
+                nftCounter++;
+                _safeMint(msg.sender, nftCounter);
+                _setTokenURI(nftCounter, nftURI);
+                emit NFTMinted(msg.sender, nftCounter, nftURI);
+            }
         }
 
         emit InvestorRegistered(msg.sender, investorType, amount);
-    }
-
-    function getInvestment(address investor) external view returns (uint256) {
-        return investors[investor].amount;
     }
 }

@@ -15,7 +15,7 @@ module.exports = {
     },
     sepolia: {
       url: `https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`, // Infura para Sepolia
-      accounts: [`0x${process.env.SEPOLIA_PRIVATE_KEY}`], // Clave privada
+      accounts: [`0x${process.env.PRIVATE_KEY_OWNER}`], // Clave privada
     },
   },
 };
